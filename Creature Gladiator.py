@@ -8,7 +8,7 @@
 # WELCOME TO CREATURE GLADIATOR
 # The great and evil wizard, Akozuto, is using blood magic to create
 # twisted and mangled creatures. YOU MUST STOP HIM!
-#
+#    
 import random
 from easygui import *
 from appJar import gui
