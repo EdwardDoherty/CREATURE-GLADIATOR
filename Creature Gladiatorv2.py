@@ -1,17 +1,5 @@
 # Made by Joe Doherty   July 2022
-#
-#
-#
-# CREATURE GLADIATOR!
 
-# ====================Creature Gladiator Wish List:===================================================================
-# Creature generator:
-#   Count each creature wave
-# High score data, saved and shown when opening the game and when losing
-# Enchanted item selection during character creator
-#   Enchanted items can reduce damage taken or add more chance of blocking damage or healing
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#
 # ======================================================================================================================
 # WELCOME TO CREATURE GLADIATOR
 # The great and evil wizard, Akozuto, is using blood magic to create
@@ -333,9 +321,7 @@ class PlayerScore:
 
     def subtract(self, scoreToSubtract):
         self.playerScore -= scoreToSubtract
-
 playerScore = PlayerScore()
-
 
 # Asks the player to choose which enemy they would like to attack, as well as displaying their current stats with __repr__()
 def enemyChoicebox():
@@ -429,7 +415,6 @@ def characterCreator():
     global playerOne
     playerOne = Player(nameChoice, playerClass)
 
-
 #-----------------------------------------------------------------------------------------------------------------------
 # Enemy Generator
 creatureList = []
@@ -468,7 +453,6 @@ def createCreature():
     creatureClass = classPicker()
 
     return Creature(creatureName, creatureClass)
-
 
 def newBattlefield():
     #Save these creatures for boss battles or something
@@ -512,7 +496,6 @@ def attackLoop():
         # If no one has won, keep looping through the game!
         attackLoop()
 
-
 #-----------------------------------------------------------------------------------------------------------------------
 # intro Message box
 def introMessage():
@@ -532,11 +515,13 @@ def introMessage():
 	    3. This blocks all damage for the next turn
 	
     Make a selection by entering the number of your choice, and then pressing 'enter'.
+    
+    Note: All enemy names are randomly generated and may very rarely create unsavory combinations.
+    Chances are pretty slim and I'm not 100% it's even possible given the system I built, but regardless, user beware
     ====================================================================================================================
 	"""
 
     print(beginMsg)
-
 
 #------------------ENEMY CLASS LIST------------------ENEMY CLASS LIST------------------ENEMY CLASS LIST-----------------
 #class list to initialize all enemy class types
@@ -551,7 +536,6 @@ erzogSwine = EnemyClass("Erzog-Swine", 30, 40, "Head-Butt", "Hill-Roller", "Mud-
 flameSphynx = EnemyClass("Flame Sphynx", 40, 80, "Burning Eyes", "Conflagration", "Incinerator Shield")
 ratSoldier = EnemyClass("Rat Soldier", 50, 30, "Sword-Stab", "Tail Whip", "Shield-Bash")
 bearPaladin = EnemyClass("Bear Paladin", 80, 30, "Light-Blade", "Sun-Beam", "Armor of Erzog")
-
 
 # ----------------CLASS LIST------------CLASS LIST-------------CLASS LIST--------------CLASS LIST------------CLASS LIST-
 # class list to save all classes in
@@ -576,9 +560,6 @@ introMessage()
 
 # Game begins, you must create your character!
 characterCreator()
-
-
-
 
 # Ready, FIGHT!
 newBattlefield()
