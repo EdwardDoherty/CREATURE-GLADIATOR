@@ -2,29 +2,16 @@
 #
 #
 #
-# CREATURE GLADIATOR 2!
-#
-# =====================Creature Gladiator 2 Fix List:===================================================================
-#
-#
-#
-#
-#
-# ====================Creature Gladiator 2 Wish List:===================================================================
-# Creatures use different moves
+# CREATURE GLADIATOR!
+
+# ====================Creature Gladiator Wish List:===================================================================
 # Creature generator:
-#   Generate creature names
-#   Assign creatures to a class type
 #   Count each creature wave
 # High score data, saved and shown when opening the game and when losing
 # Enchanted item selection during character creator
 #   Enchanted items can reduce damage taken or add more chance of blocking damage or healing
-#
-#
-#
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#        <=========]==O    CREATURE
-#   (\)_(/)           GLADIATOR
+#
 # ======================================================================================================================
 # WELCOME TO CREATURE GLADIATOR
 # The great and evil wizard, Akozuto, is using blood magic to create
@@ -32,8 +19,7 @@
 #
 import random
 import time
-# This is the console version of the game, so appJar is unused. Console version will use this however
-# import appJar
+
 
 print("- - = = ===:::: WELCOME TO CREATURE GLADIATOR ::::=== = = - -")
 
@@ -90,6 +76,7 @@ class Player:
         # If not blocking, do damage.
         elif not self.isBlocking:
             self.health -= damage
+            playerScore.subtract(damage)
             self.checkIfDead()
 
     def playerHealthPotion(self):
@@ -104,6 +91,7 @@ class Player:
     def attackMoves(self, moveNum):
         playerOne.isBlocking = False
 
+
         def battlefieldCleanUp():
             for deadEnemy in deadCreatureList:
                 for enemy in creatureList:
@@ -115,6 +103,7 @@ class Player:
             damage = self.damage
             enemyChoice = enemyChoicebox()
             enemyChoice.damageCreature(damage)
+            playerScore.add(damage)
             battlefieldCleanUp()
             global playersTurn
             playersTurn = False
@@ -124,6 +113,7 @@ class Player:
             damage = round(self.damage / 1.5)
             for creature in creatureList:
                 creature.damageCreature(damage)
+                playerScore.add(damage)
             battlefieldCleanUp()
             global playersTurn
             playersTurn = False
@@ -322,6 +312,29 @@ def inputRange(userInput, listToCheck):
 #-----------------------------------------------------------------------------------------------------------------------
 # Combat Functions
 
+#Keeps track of player score
+class PlayerScore:
+    playerScore = 0
+
+    def __init__(self):
+        self.playerScore = 0
+
+    def __repr__(self):
+        return self.playerScore
+
+    def getData(self):
+        return self.playerScore
+
+    def reset(self):
+        self.playerScore = 0
+
+    def add(self, scoreToAdd):
+        self.playerScore += scoreToAdd
+
+    def subtract(self, scoreToSubtract):
+        self.playerScore -= scoreToSubtract
+
+playerScore = PlayerScore()
 
 
 # Asks the player to choose which enemy they would like to attack, as well as displaying their current stats with __repr__()
@@ -343,6 +356,8 @@ def moveChoicebox():
     print("-----------------------------------------------------------------------------------------------------------")
     msg = "Choose your attack! \n" + playerOne.__repr__()
     print(msg)
+    currentScore = playerScore.getData()
+    print("Your score is: ", currentScore)
     numberedList(moveList)
     moveChoice = inputInt(input())
     playerOne.attackMoves(moveChoice)
@@ -355,8 +370,15 @@ def enemyMove():
 
 # Displays success message
 def youWon():
+    global wavesCompleted
+    wavesCompleted +=1
+    currentScore = playerScore.getData()
+    print("()----()----()----()----()----()----()----()----()----()----()----()----()----()----()----()----()----()----")
+    print("Your score is: ", currentScore)
+    print("Wave {wavenum} completed!".format(wavenum = wavesCompleted))
     print("You have triumphed against the creatures!")
-    print("Press 1 to continue playing")
+    print("Press 1 to continue playing, press any key to exit")
+    print("()----()----()----()----()----()----()----()----()----()----()----()----()----()----()----()----()----()----")
     continuePlaying = inputInt(input())
     if continuePlaying == 1:
         creatureList = []
@@ -368,7 +390,12 @@ def youWon():
 
 # Displays game over message
 def gameOver():
+    currentScore = playerScore.getData()
+    print("===========================================================================================================")
+    print("Your score is: ", currentScore)
+    print("You completed {wavenum} waves".format(wavenum = wavesCompleted))
     print("You have been defeated. Your strength was inadequate and our world will plunge into chaos...")
+    print("===========================================================================================================")
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Character Creator
@@ -489,16 +516,26 @@ def attackLoop():
 #-----------------------------------------------------------------------------------------------------------------------
 # intro Message box
 def introMessage():
-    # A mostly useless intro message. Will eventually explain how to play the game.
+    # An intro message explaining how to play the game
     beginMsg = """
 	WELCOME TO CREATURE GLADIATOR
 
-	The great and evil wizard, Akozuto, is using blood magic to create twisted and mangled creatures. YOU MUST STOP HIM! {name}, you are a powerful {charClass}. You are the only thing protecting our world from the terrible hoarde of Akozuto!
-	Will you do what is necessary to protect our world?
-	""".format(name=playerOne.name, charClass=playerOne.fighterClass.name)
+	The great and evil wizard, Akozuto, is using blood magic to create twisted and mangled creatures. YOU MUST STOP HIM!
+	====================================================================================================================
+	Try to beat as many waves of Akozuto's creatures as you can!
+	
+	First, create your character and choose a class! Each class has a different amount of health, and does a different
+	amount of damage.
+	Each class has three moves:
+	    1. A direct damage attack. You choose a single creature to attack, using all of your might
+	    2. An area attack. This attacks all enemies on the battlefield, but isnt as powerful.
+	    3. This blocks all damage for the next turn
+	
+    Make a selection by entering the number of your choice, and then pressing 'enter'.
+    ====================================================================================================================
+	"""
 
-    if (input("yes or no") == "no"):
-        exit()
+    print(beginMsg)
 
 
 #------------------ENEMY CLASS LIST------------------ENEMY CLASS LIST------------------ENEMY CLASS LIST-----------------
@@ -528,21 +565,20 @@ warrior = PlayerClass("Warrior", 80, 40, "Hack", "Tear Asunder", "Shield Block")
 sorceror = PlayerClass("Sorcerer", 50, 70, "Banish", "Meteoric Rain", "Teleport")
 swordsman = PlayerClass("Swordsman", 70, 50, "Stab", "Slash", "Block")
 druid = PlayerClass("Druid", 85, 35, "Spider Venom", "Poison Gas", "Staff Block")
-#------------------ENEMY LIST------------------ENEMY LIST------------------ENEMY LIST------------------ENEMY LIST-------
-
-
-
-
-
 
 # ======================================================================================================================
 # -----------------BEGIN!-----------------BEGIN!-----------------BEGIN!-----------------BEGIN!-----------------BEGIN!---
 # ======================================================================================================================
+wavesCompleted = 0
+
+#plays introMessage.
+introMessage()
+
 # Game begins, you must create your character!
 characterCreator()
 
-#plays introMessage. Toggle with #
-#introMessage()
+
+
 
 # Ready, FIGHT!
 newBattlefield()
